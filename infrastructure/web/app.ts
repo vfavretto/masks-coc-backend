@@ -8,15 +8,24 @@ import { errorHandler } from './middlewares/errorHandler';
 export const createApp = (): Express => {
   const app = express();
 
+  // CORS configuration
+  const corsOptions = {
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Default to Vite's default port
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
+  };
+
   app.use(express.json());
-  app.use(cors());
+  app.use(cors(corsOptions));
   app.use(helmet());
 
-  // Rota raiz para teste de deploy
-  app.get('/', (req, res) => {
-    res.status(200).json({ message: 'Masks CoC API is finally running!' });
+  // Health check endpoint
+  app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'ok', timestamp: new Date().toISOString() });
   });
 
+  // API routes
   app.use('/api/characters', characterRoutes);
   app.use('/api/sessions', sessionRoutes);
 
