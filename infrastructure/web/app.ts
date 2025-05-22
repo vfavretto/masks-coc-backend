@@ -8,7 +8,7 @@ import { errorHandler } from './middlewares/errorHandler';
 export const createApp = (): Express => {
   const app = express();
 
-  // CORS configuration
+  // CORS configuration - melhorada para suportar DELETE e preflight
   const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Lista de origens permitidas
@@ -35,13 +35,34 @@ export const createApp = (): Express => {
       console.log('❌ CORS: Origin not allowed');
       return callback(new Error('Not allowed by CORS'), false);
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Adicionar OPTIONS para preflight
+    allowedHeaders: [
+      'Content-Type', 
+      'Authorization', 
+      'X-Requested-With',
+      'Accept',
+      'Origin'
+    ], // Headers mais completos
+    exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Headers que o cliente pode acessar
+    credentials: true,
+    preflightContinue: false, // Não passar preflight para próximo handler
+    optionsSuccessStatus: 200 // Para suportar navegadores legados
   };
 
   app.use(express.json());
   app.use(cors(corsOptions));
+  
+  // Middleware adicional para preflight requests
+  app.options('*', (req, res) => {
+    console.log('🚀 Preflight request for:', req.method, req.url);
+    console.log('🚀 Origin:', req.headers.origin);
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    res.sendStatus(200);
+  });
+  
   app.use(helmet());
 
   // Health check endpoint

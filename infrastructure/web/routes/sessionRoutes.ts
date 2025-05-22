@@ -57,6 +57,9 @@ router.put('/:id', async (req, res) => {
 });
 
 router.delete('/:id', async (req, res) => {
+  console.log('🗑️ DELETE request received for session:', req.params.id);
+  console.log('🌍 Request origin:', req.headers.origin);
+  console.log('🔧 Request headers:', JSON.stringify(req.headers, null, 2));
   await sessionController.deleteSession(req, res);
 });
 
