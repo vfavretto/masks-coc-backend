@@ -24,7 +24,7 @@ export class CharacterController {
   async getAllCharacters(req: Request, res: Response): Promise<Response> {
     try {
       const characters = await this.getAllCharactersUseCase.execute();
-      return res.status(200).json({ characters });
+      return res.status(200).json(characters);
     } catch (error) {
       console.error("Error fetching characters:", error);
       return res.status(500).json({ message: "Error fetching characters" });
