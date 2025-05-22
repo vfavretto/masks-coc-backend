@@ -8,61 +8,56 @@ import { errorHandler } from './middlewares/errorHandler';
 export const createApp = (): Express => {
   const app = express();
 
-  // CORS configuration - melhorada para suportar DELETE e preflight
+  const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://vfavretto.github.io',
+    'https://masks-coc-backend.onrender.com',
+    process.env.FRONTEND_URL
+  ].filter(Boolean) as string[]; // filter(Boolean) remove null/undefined
+
+  // Middleware para preflight requests ANTES da configuração principal do CORS
+  app.options('*', (req: express.Request, res: express.Response) => {
+    const origin = req.headers.origin as string; // Cast para string, já que verificaremos
+    console.log('🚀 Preflight (app.options) for:', req.method, req.url, 'from origin:', origin);
+
+    if (allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin);
+      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
+      res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
+      res.header('Access-Control-Allow-Credentials', 'true');
+      console.log('✅ Preflight (app.options) allowed for origin:', origin);
+      res.sendStatus(204); // No Content
+    } else if (!origin && (req.path.startsWith('/api/') || req.path === '/health')){
+        // Permite requisições diretas sem Origin (Postman, etc) para as rotas da API ou health check
+        console.log('✅ Preflight (app.options) allowed for no-origin (direct API/health call):', req.path);
+        res.sendStatus(204); 
+    }else {
+      console.log('❌ Preflight (app.options) denied for origin:', origin, 'for path:', req.path);
+      res.sendStatus(403); // Forbidden
+    }
+  });
+
+  // Configuração CORS principal
   const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      // Lista de origens permitidas
-      const allowedOrigins = [
-        'http://localhost:5173',
-        'http://localhost:3000', 
-        'https://vfavretto.github.io',
-        'https://masks-coc-backend.onrender.com',
-        process.env.FRONTEND_URL
-      ].filter(Boolean); // Remove valores undefined
-
-      console.log('🌍 CORS Request from origin:', origin);
-      console.log('🔧 Allowed origins:', allowedOrigins);
-      
-      // Permite requisições sem origin (ex: Postman, apps móveis)
-      if (!origin) return callback(null, true);
-      
-      // Verifica se a origem está na lista permitida
-      if (allowedOrigins.includes(origin)) {
-        console.log('✅ CORS: Origin allowed');
-        return callback(null, true);
+      console.log('🌍 CORS Check (corsOptions) for origin:', origin);
+      if (!origin || allowedOrigins.includes(origin)) {
+        console.log('✅ CORS Check (corsOptions) allowed for origin:', origin || '"none" (server-to-server or blocked by browser)');
+        callback(null, true);
+      } else {
+        console.log('❌ CORS Check (corsOptions) denied for origin:', origin);
+        callback(new Error('Not allowed by CORS: Origin not in allowed list.'));
       }
-      
-      console.log('❌ CORS: Origin not allowed');
-      return callback(new Error('Not allowed by CORS'), false);
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // Adicionar OPTIONS para preflight
-    allowedHeaders: [
-      'Content-Type', 
-      'Authorization', 
-      'X-Requested-With',
-      'Accept',
-      'Origin'
-    ], // Headers mais completos
-    exposedHeaders: ['Content-Length', 'X-Kuma-Revision'], // Headers que o cliente pode acessar
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // OPTIONS já é tratado pelo app.options('*')
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
     credentials: true,
-    preflightContinue: false, // Não passar preflight para próximo handler
-    optionsSuccessStatus: 200 // Para suportar navegadores legados
+    // optionsSuccessStatus: 204, // Se não usar app.options, o middleware cors pode lidar com OPTIONS
   };
-
+  
   app.use(express.json());
-  app.use(cors(corsOptions));
-  
-  // Middleware adicional para preflight requests
-  app.options('*', (req, res) => {
-    console.log('🚀 Preflight request for:', req.method, req.url);
-    console.log('🚀 Origin:', req.headers.origin);
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.sendStatus(200);
-  });
-  
+  app.use(cors(corsOptions)); // Middleware CORS principal
   app.use(helmet());
 
   // Health check endpoint
