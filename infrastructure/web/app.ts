@@ -10,7 +10,31 @@ export const createApp = (): Express => {
 
   // CORS configuration
   const corsOptions = {
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173', // Default to Vite's default port
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+      // Lista de origens permitidas
+      const allowedOrigins = [
+        'http://localhost:5173',
+        'http://localhost:3000', 
+        'https://vfavretto.github.io',
+        'https://masks-coc-backend.onrender.com',
+        process.env.FRONTEND_URL
+      ].filter(Boolean); // Remove valores undefined
+
+      console.log('🌍 CORS Request from origin:', origin);
+      console.log('🔧 Allowed origins:', allowedOrigins);
+      
+      // Permite requisições sem origin (ex: Postman, apps móveis)
+      if (!origin) return callback(null, true);
+      
+      // Verifica se a origem está na lista permitida
+      if (allowedOrigins.includes(origin)) {
+        console.log('✅ CORS: Origin allowed');
+        return callback(null, true);
+      }
+      
+      console.log('❌ CORS: Origin not allowed');
+      return callback(new Error('Not allowed by CORS'), false);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
