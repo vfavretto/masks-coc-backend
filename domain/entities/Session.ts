@@ -1,8 +1,11 @@
 export interface Clue {
     id: string;
     name: string;
-    description:string;
-    type: string
+    description: string;
+    type: string;
+    image?: string;
+    tag?: string;
+    location?: string;
 }
 
 export interface Item {

@@ -17,7 +17,10 @@ export class MongoSessionRepository implements SessionRepository {
         id: clue.id.toString(),
         name: clue.name,
         description: clue.description,
-        type: clue.type
+        type: clue.type,
+        image: clue.image,
+        tag: clue.tag,
+        location: clue.location
       })),
       items: doc.items.map(item => ({
         id: item.id.toString(),

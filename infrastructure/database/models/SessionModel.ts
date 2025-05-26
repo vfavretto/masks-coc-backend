@@ -7,6 +7,9 @@ const ClueSchema = new Schema({
     name: {type: String, required: true},
     description: {type: String, required: true},
     type: {type: String, required: true},
+    image: {type: String, required: false},
+    tag: {type: String, required: false},
+    location: {type: String, required: false},
 }, {_id: true});
 
 const ItemSchema = new Schema({

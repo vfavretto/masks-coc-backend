@@ -6,6 +6,9 @@ const clueSchema = Joi.object({
   name: Joi.string().required(),
   description: Joi.string().required(),
   type: Joi.string().required(),
+  image: Joi.string().optional().allow(''),
+  tag: Joi.string().optional().allow(''),
+  location: Joi.string().optional().allow(''),
 }).unknown(false); // Não permitir campos desconhecidos
 
 const itemSchema = Joi.object({
