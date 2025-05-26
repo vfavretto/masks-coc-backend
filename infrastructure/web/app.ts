@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import { characterRoutes } from './routes/characterRoutes';
 import { sessionRoutes } from './routes/sessionRoutes';
+import { debugRoutes } from './routes/debugRoutes';
 import { errorHandler } from './middlewares/errorHandler';
 
 export const createApp = (): Express => {
@@ -67,6 +68,7 @@ export const createApp = (): Express => {
   // API routes
   app.use('/api/characters', characterRoutes);
   app.use('/api/sessions', sessionRoutes);
+  app.use('/debug', debugRoutes);
 
   app.use(errorHandler as ErrorRequestHandler);
 
