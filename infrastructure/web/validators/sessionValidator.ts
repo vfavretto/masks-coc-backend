@@ -1,17 +1,19 @@
 import Joi from 'joi';
 import { Session, Clue, Item } from '../../../domain/entities/Session';
 
-const clueSchema = Joi.object<Omit<Clue, 'id'>>({
+const clueSchema = Joi.object({
+  id: Joi.string().optional(), // Permitir id opcional (frontend pode enviar)
   name: Joi.string().required(),
   description: Joi.string().required(),
   type: Joi.string().required(),
-});
+}).unknown(false); // Não permitir campos desconhecidos
 
-const itemSchema = Joi.object<Omit<Item, 'id'>>({
+const itemSchema = Joi.object({
+  id: Joi.string().optional(), // Permitir id opcional (frontend pode enviar)
   name: Joi.string().required(),
   description: Joi.string().required(),
   type: Joi.string().required(),
-});
+}).unknown(false); // Não permitir campos desconhecidos
 
 const createSessionSchema = Joi.object<Omit<Session, 'id' | 'createdAt' | 'updatedAt'>>({
   title: Joi.string().required(),

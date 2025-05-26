@@ -12,30 +12,29 @@ export const createApp = (): Express => {
     'http://localhost:5173',
     'http://localhost:3000',
     'https://vfavretto.github.io',
+    'https://vfavretto.github.io/masks-coc',
     'https://masks-coc-backend.onrender.com',
     process.env.FRONTEND_URL
   ].filter(Boolean) as string[]; // filter(Boolean) remove null/undefined
 
   // Middleware para preflight requests ANTES da configuração principal do CORS
   app.options('*', (req: express.Request, res: express.Response) => {
-    const origin = req.headers.origin as string; // Cast para string, já que verificaremos
-    console.log('🚀 Preflight (app.options) for:', req.method, req.url, 'from origin:', origin);
+    const origin = req.headers.origin as string;
+    console.log('🚀 Preflight OPTIONS for:', req.method, req.url, 'from origin:', origin);
 
-    if (allowedOrigins.includes(origin)) {
-      res.header('Access-Control-Allow-Origin', origin);
+    // Permitir todas as origens permitidas ou requisições sem origin (Postman, etc)
+    if (!origin || allowedOrigins.includes(origin)) {
+      res.header('Access-Control-Allow-Origin', origin || '*');
       res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
       res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
       res.header('Access-Control-Allow-Credentials', 'true');
-      console.log('✅ Preflight (app.options) allowed for origin:', origin);
-      res.sendStatus(204); // No Content
-    } else if (!origin && (req.path.startsWith('/api/') || req.path === '/health')){
-        // Permite requisições diretas sem Origin (Postman, etc) para as rotas da API ou health check
-        console.log('✅ Preflight (app.options) allowed for no-origin (direct API/health call):', req.path);
-        res.sendStatus(204); 
-    }else {
-      console.log('❌ Preflight (app.options) denied for origin:', origin, 'for path:', req.path);
-      res.sendStatus(403); // Forbidden
+      console.log('✅ Preflight allowed for origin:', origin || 'no-origin');
+      res.sendStatus(204);
+      return;
     }
+    
+    console.log('❌ Preflight denied for origin:', origin);
+    res.sendStatus(403);
   });
 
   // Configuração CORS principal

@@ -76,16 +76,24 @@ export class SessionController {
   async createSession(req: Request, res: Response): Promise<Response> {
     try {
       const sessionData = req.body;
+      console.log('📝 Creating session with data:', JSON.stringify(sessionData, null, 2));
+      
       const { error, value } = validateCreateSession(sessionData);
       
       if (error) {
-        return res.status(400).json({ message: error.message });
+        console.error('❌ Validation error:', error.message);
+        console.error('❌ Validation details:', error.details);
+        return res.status(400).json({ 
+          message: error.message,
+          details: error.details 
+        });
       }
       
       const session = await this.createSessionUseCase.execute(value);
+      console.log('✅ Session created successfully:', session.id);
       return res.status(201).json(session);
     } catch (error) {
-      console.error('Error creating session:', error);
+      console.error('💥 Error creating session:', error);
       return res.status(500).json({ message: 'Internal server error' });
     }
   }
