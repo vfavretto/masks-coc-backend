@@ -31,10 +31,7 @@ export class MongoSessionRepository implements SessionRepository {
   }
 
   async findAll(): Promise<Session[]> {
-    console.log('🔍 MongoSessionRepository.findAll() called');
     const sessions = await SessionModel.find().sort({ date: -1 });
-    console.log('📊 Found sessions in database:', sessions.length);
-    console.log('📋 Sessions data:', sessions.map(s => ({ id: s.id, title: s.title })));
     return sessions.map(session => this.documentToEntity(session));
   }
 
