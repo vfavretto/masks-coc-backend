@@ -24,7 +24,10 @@ export class SessionController {
 
   async getAllSessions(req: Request, res: Response): Promise<Response> {
     try {
+      console.log('🎯 SessionController.getAllSessions() called');
       const sessions = await this.getAllSessionsUseCase.execute();
+      console.log('📦 Sessions returned from use case:', sessions.length);
+      console.log('📋 Sessions data:', sessions.map(s => ({ id: s.id, title: s.title })));
       return res.status(200).json(sessions);
     } catch (error) {
       console.error('Error fetching sessions:', error);
