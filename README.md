@@ -7,7 +7,7 @@
 
 Backend REST API para gerenciamento de campanhas de RPG Call of Cthulhu, permitindo o controle de personagens, sessões, pistas e itens de campanha.
 
-## 📋 Índice
+## Índice
 
 - [Visão Geral](#-visão-geral)
 - [Recursos](#-recursos)
@@ -23,7 +23,7 @@ Backend REST API para gerenciamento de campanhas de RPG Call of Cthulhu, permiti
 - [Contribuindo](#-contribuindo)
 - [Licença](#-licença)
 
-## 🎯 Visão Geral
+## Visão Geral
 
 Este projeto é um backend completo para gerenciar campanhas de RPG Call of Cthulhu (ou Masks of Nyarlathotep). Ele fornece uma API REST robusta para:
 
@@ -32,7 +32,7 @@ Este projeto é um backend completo para gerenciar campanhas de RPG Call of Cthu
 - **Buscar e filtrar** sessões por tags, localização ou termos de pesquisa
 - **Rastrear sanidade** e condições mentais dos personagens
 
-## ✨ Recursos
+## Recursos
 
 ### Gerenciamento de Personagens
 
@@ -53,7 +53,7 @@ Este projeto é um backend completo para gerenciar campanhas de RPG Call of Cthu
 - ✅ Filtros por tags múltiplas
 - ✅ Suporte a imagens
 
-## 🛠 Tecnologias
+## Tecnologias
 
 ### Backend
 
@@ -76,7 +76,7 @@ Este projeto é um backend completo para gerenciar campanhas de RPG Call of Cthu
 - **Prettier** - Formatação de código
 - **Husky** - Git hooks
 
-## 🏗 Arquitetura
+## Arquitetura
 
 O projeto segue os princípios da **Clean Architecture**, organizado em camadas:
 
@@ -105,7 +105,7 @@ O projeto segue os princípios da **Clean Architecture**, organizado em camadas:
 - ✅ Alta coesão
 - ✅ Independência de frameworks
 
-## 📦 Instalação
+## Instalação
 
 ### Pré-requisitos
 
@@ -147,7 +147,7 @@ docker run -d -p 27017:27017 --name mongodb mongo:latest
 sudo systemctl start mongod
 ```
 
-## ⚙️ Configuração
+## Configuração
 
 ### Variáveis de Ambiente
 
@@ -171,7 +171,7 @@ A aplicação cria automaticamente as coleções necessárias:
 - `characters` - Personagens
 - `sessions` - Sessões de jogo
 
-## 🚀 Uso
+## Uso
 
 ### Desenvolvimento
 
@@ -225,7 +225,7 @@ const characters = await response.json();
 console.log(characters);
 ```
 
-## 📚 Documentação da API
+## Documentação da API
 
 A documentação completa da API está disponível em [`docs/API.md`](docs/API.md).
 
@@ -292,7 +292,7 @@ const response = await fetch('http://localhost:3000/api/characters', {
 const createdCharacter = await response.json();
 ```
 
-## 📁 Estrutura do Projeto
+## Estrutura do Projeto
 
 ```
 rpg-campaign-backend/
@@ -347,7 +347,7 @@ npm run format      # Formata código com Prettier
 npm test           # Executa testes (quando implementados)
 ```
 
-## 🔧 Desenvolvimento
+## Desenvolvimento
 
 ### Adicionando Novo Caso de Uso
 
