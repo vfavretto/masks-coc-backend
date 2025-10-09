@@ -372,50 +372,9 @@ export class ArchiveCharacterUseCase {
 // 2. Adicionar ao controller e route
 ```
 
-### Padrões de Código
-
-- Use **TypeScript** para tipagem estática
-- Siga os princípios **SOLID**
-- Mantenha funções pequenas e focadas
-- Escreva testes para novos recursos
-- Use **async/await** para código assíncrono
-- Valide entrada com **Joi**
-
-### Git Hooks
-
-O projeto usa Husky para executar verificações antes dos commits:
-- Formatação de código
-- Lint
-- Testes (quando disponíveis)
-
-## 🤝 Contribuindo
-
-Contribuições são bem-vindas! Siga estes passos:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/MinhaFeature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona MinhaFeature'`)
-4. Push para a branch (`git push origin feature/MinhaFeature`)
-5. Abra um Pull Request
-
-### Diretrizes
-
-- Mantenha a arquitetura limpa
-- Adicione testes para novos recursos
-- Atualize a documentação
-- Siga os padrões de código existentes
-
 ## 📄 Licença
 
 Este projeto está sob a licença ISC. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
-
-## 📞 Suporte
-
-Para questões e suporte:
-
-- 📧 Email: seu-email@exemplo.com
-- 🐛 Issues: [GitHub Issues](https://github.com/seu-usuario/rpg-campaign-backend/issues)
-- 📖 Documentação: [`docs/`](docs/)
 
 ## 🔗 Links Úteis
 
@@ -424,7 +383,3 @@ Para questões e suporte:
 - [Modelos de Dados](docs/MODELS.md)
 - [Call of Cthulhu RPG](https://www.chaosium.com/call-of-cthulhu-rpg/)
 - [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
-
----
-
-**Desenvolvido com ❤️ para mestres e jogadores de Call of Cthulhu**
