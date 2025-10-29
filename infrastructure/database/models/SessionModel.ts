@@ -30,6 +30,13 @@ const SessionSchema = new Schema({
     items: [ItemSchema], 
 }, {timestamps: true});
 
+// Text index for full-text search
 SessionSchema.index({title: 'text', summary: 'text', details: 'text', location: 'text'});
+
+// Index on tags for faster filtering by tags
+SessionSchema.index({tags: 1});
+
+// Index on date for faster sorting
+SessionSchema.index({date: -1});
 
 export const SessionModel = mongoose.model<SessionDocument>('Session', SessionSchema);

@@ -34,8 +34,8 @@ export class MongoSessionRepository implements SessionRepository {
   }
 
   async findAll(): Promise<Session[]> {
-    const sessions = await SessionModel.find().sort({ date: -1 });
-    return sessions.map(session => this.documentToEntity(session));
+    const sessions = await SessionModel.find().sort({ date: -1 }).lean();
+    return sessions.map(session => this.documentToEntity(session as SessionDocument));
   }
 
   async findById(id: string): Promise<Session | null> {
@@ -44,17 +44,17 @@ export class MongoSessionRepository implements SessionRepository {
   }
 
   async findByTags(tags: string[]): Promise<Session[]> {
-    const sessions = await SessionModel.find({ tags: { $in: tags } }).sort({ date: -1 });
-    return sessions.map(session => this.documentToEntity(session));
+    const sessions = await SessionModel.find({ tags: { $in: tags } }).sort({ date: -1 }).lean();
+    return sessions.map(session => this.documentToEntity(session as SessionDocument));
   }
 
   async search(term: string): Promise<Session[]> {
     const sessions = await SessionModel.find(
       { $text: { $search: term } },
       { score: { $meta: "textScore" } }
-    ).sort({ score: { $meta: "textScore" } });
+    ).sort({ score: { $meta: "textScore" } }).lean();
     
-    return sessions.map(session => this.documentToEntity(session));
+    return sessions.map(session => this.documentToEntity(session as SessionDocument));
   }
 
   async create(sessionData: Omit<Session, 'id' | 'createdAt' | 'updatedAt'>): Promise<Session> {

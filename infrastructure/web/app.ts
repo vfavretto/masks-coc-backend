@@ -16,48 +16,26 @@ export const createApp = (): Express => {
     'https://vfavretto.github.io/masks-coc',
     'https://masks-coc-backend.onrender.com',
     process.env.FRONTEND_URL
-  ].filter(Boolean) as string[]; // filter(Boolean) remove null/undefined
+  ].filter(Boolean) as string[];
 
-  // Middleware para preflight requests ANTES da configuração principal do CORS
-  app.options('*', (req: express.Request, res: express.Response) => {
-    const origin = req.headers.origin as string;
-    console.log('🚀 Preflight OPTIONS for:', req.method, req.url, 'from origin:', origin);
-
-    // Permitir todas as origens permitidas ou requisições sem origin (Postman, etc)
-    if (!origin || allowedOrigins.includes(origin)) {
-      res.header('Access-Control-Allow-Origin', origin || '*');
-      res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH,OPTIONS');
-      res.header('Access-Control-Allow-Headers', 'Content-Type,Authorization,X-Requested-With,Accept,Origin');
-      res.header('Access-Control-Allow-Credentials', 'true');
-      console.log('✅ Preflight allowed for origin:', origin || 'no-origin');
-      res.sendStatus(204);
-      return;
-    }
-    
-    console.log('❌ Preflight denied for origin:', origin);
-    res.sendStatus(403);
-  });
-
-  // Configuração CORS principal
+  // Optimized CORS configuration
   const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
-      console.log('🌍 CORS Check (corsOptions) for origin:', origin);
+      // Allow requests with no origin (like mobile apps, Postman, or server-to-server)
       if (!origin || allowedOrigins.includes(origin)) {
-        console.log('✅ CORS Check (corsOptions) allowed for origin:', origin || '"none" (server-to-server or blocked by browser)');
         callback(null, true);
       } else {
-        console.log('❌ CORS Check (corsOptions) denied for origin:', origin);
-        callback(new Error('Not allowed by CORS: Origin not in allowed list.'));
+        callback(new Error('Not allowed by CORS'));
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // OPTIONS já é tratado pelo app.options('*')
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
     credentials: true,
-    // optionsSuccessStatus: 204, // Se não usar app.options, o middleware cors pode lidar com OPTIONS
+    optionsSuccessStatus: 204,
   };
   
   app.use(express.json());
-  app.use(cors(corsOptions)); // Middleware CORS principal
+  app.use(cors(corsOptions));
   app.use(helmet());
 
   // Health check endpoint
