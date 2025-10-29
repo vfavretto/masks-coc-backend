@@ -31,8 +31,8 @@ export class MongoCharacterRepository implements CharacterRepository {
     }
 
     async findAll(): Promise<Character[]> {
-        const characters = await CharacterModel.find();
-        return characters.map(character => this.documentToEntity(character));
+        const characters = await CharacterModel.find().lean();
+        return characters.map(character => this.documentToEntity(character as CharacterDocument));
     }
 
     async findById(id: string): Promise<Character | null> {

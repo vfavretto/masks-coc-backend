@@ -50,6 +50,10 @@ const CharacterSchema = new Schema({
     
 }, {timestamps: true});
 
+// Text index for full-text search
 CharacterSchema.index({ name: 'text', occupation: 'text', background: 'text' });
+
+// Index on name for faster lookups and sorting
+CharacterSchema.index({ name: 1 });
 
 export const CharacterModel = mongoose.model<CharacterDocument>('Character', CharacterSchema);
