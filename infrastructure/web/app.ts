@@ -4,6 +4,10 @@ import helmet from 'helmet';
 import { characterRoutes } from './routes/characterRoutes';
 import { sessionRoutes } from './routes/sessionRoutes';
 import { debugRoutes } from './routes/debugRoutes';
+import { authRoutes } from './routes/authRoutes';
+import { noteRoutes } from './routes/noteRoutes';
+import { eventRoutes } from './routes/eventRoutes';
+import { profileRoutes } from './routes/profileRoutes';
 import { errorHandler } from './middlewares/errorHandler';
 
 export const createApp = (): Express => {
@@ -44,6 +48,10 @@ export const createApp = (): Express => {
   });
 
   // API routes
+  app.use('/api/auth', authRoutes);
+  app.use('/api/profile', profileRoutes);
+  app.use('/api/notes', noteRoutes);
+  app.use('/api/events', eventRoutes);
   app.use('/api/characters', characterRoutes);
   app.use('/api/sessions', sessionRoutes);
   app.use('/debug', debugRoutes);
